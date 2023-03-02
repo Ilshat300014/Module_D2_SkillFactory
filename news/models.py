@@ -4,25 +4,33 @@ from django.contrib.auth.models import User
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_rating = models.IntegerField(default=0)
-
+    def update_rating(self):
+        
 
 class Category(models.Model):
     category_name = models.CharField(max_length=255, unique=True)
 
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    choice = models.CharField(max_length=3)
+
+    ARTICLE = 'AR'
+    NEWS = 'NW'
+    CHOICES = [
+        (ARTICLE, 'Статья'),
+        (NEWS, 'Новость')
+    ]
+    choice = models.CharField(max_length=2, choices=CHOICES, default=ARTICLE)
     create_date = models.DateTimeField(auto_now_add=True)
-    category = models.ManyToManyField(Category)
+    category = models.ManyToManyField(Category, through='PostCategory')
     post_title = models.CharField(max_length=255)
     post_text = models.TextField()
     post_rating = models.IntegerField(default=0)
 
     def like(self):
-        self.post_rating + 1
+        self.post_rating += 1
         self.save()
     def dislike(self):
-        self.post_rating - 1
+        self.post_rating -= 1
         self.save()
 
     def preview(self):
@@ -40,18 +48,12 @@ class Comment(models.Model):
     comment_rating = models.IntegerField()
 
     def like(self):
-        self.post_rating + 1
+        self.comment_rating += 1
         self.save()
 
     def dislike(self):
-        self.post_rating - 1
+        self.comment_rating -= 1
         self.save()
 
 
-# Create your models here.
-# sauto_now
-# Если True, то автоматически устанавливает в это поле текущую дату каждый раз при сохранении объекта.
-# auto_now_add
-# Если True, то автоматически устанавливает в это поле дату создания объекта.
-# default
 
