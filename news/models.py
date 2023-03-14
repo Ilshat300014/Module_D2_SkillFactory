@@ -6,7 +6,6 @@ class Author(models.Model):
     authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
     userRating = models.IntegerField(default=0)
     def update_rating(self):
-<<<<<<< HEAD
         # Рейтинг всех постов автора
         postRat = self.post_set.all().aggregate(postRating=Sum('postRating'))
         pRat = 0
@@ -24,10 +23,6 @@ class Author(models.Model):
 
         self.userRating += pRat * 3 + cRat
         self.save()
-=======
-        bla-bla
-        
->>>>>>> a2efa08e9acb84e762f206caa6fb2007a318e6c0
 
 class Category(models.Model):
     categoryName = models.CharField(max_length=255, unique=True)
